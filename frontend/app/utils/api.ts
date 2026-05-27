@@ -12,7 +12,7 @@
 // o TypeScript avisa na hora de compilar (ajuda a evitar bugs).
 interface balde {
     name: string,   // nome da pessoa
-    balde: boolean  // true = tomou banho de balde, false = não tomou
+    balde: boolean  // true = é balde, false = não é balde
 }
 
 // URL base do nosso backend Django (rodando localmente na porta 8000)
