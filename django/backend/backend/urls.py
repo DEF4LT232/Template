@@ -16,14 +16,35 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from django.http import HttpRequest, HttpResponse  # HttpRequest = dados da requisição, HttpResponse = resposta que devolvemos
+# HttpRequest = objeto com os dados da requisição HTTP que o cliente enviou
+# JsonResponse = função que monta uma resposta HTTP com JSON
+from django.http import HttpRequest, JsonResponse
 
-def home(request: HttpRequest):  # View da página inicial — recebe uma requisição e devolve uma resposta
-    return HttpResponse("teste")  # Resposta HTTP simples com texto "teste"
+# VIEW — é uma função que recebe uma requisição HTTP e devolve uma resposta HTTP.
+# O Django chama essa função automaticamente quando alguém acessa a URL correspondente.
+#
+# request: HttpRequest contém tudo que o navegador enviou (cabeçalhos, método, body, etc.)
+# A view processa a lógica (consultar banco, etc.) e devolve um JsonResponse
+def home(request: HttpRequest):
+    listaDeBaldes = [
+        {"name": "pedro", "balde": True},
+        {"name": "nadil", "balde": True},
+        {"name": "hiago", "balde": True}
+    ]
 
-# urlpatterns mapeia URLs para as views correspondentes
-# Ex: quando alguém acessar "http://localhost:8000/", chama a função home()
+    # JsonResponse() converte um dicionário Python para JSON automaticamente
+    # e devolve como resposta HTTP. O Django cuida de:
+    #   1. Serializar o dict para JSON (transformar Python em texto JSON)
+    #   2. Definir o Content-Type como application/json
+    #   3. Montar a resposta HTTP completa com cabeçalhos corretos
+    return JsonResponse({
+        "baldes": listaDeBaldes
+    })
+
+# urlpatterns é a lista que mapeia URLs para as views correspondentes.
+# Cada "path()" associa um caminho de URL à função que deve tratá-la.
+# O Django percorre essa lista de cima pra baixo até achar a primeira rota que bate.
 urlpatterns = [
-    path('admin/', admin.site.urls),  # Rota /admin/ — painel administrativo do Django
-    path('', home),  # Rota raiz (/)
+    path('admin/', admin.site.urls),   # Rota /admin/ — painel administrativo do Django
+    path('', home),                    # Rota raiz (/) — chama a view home()
 ]
